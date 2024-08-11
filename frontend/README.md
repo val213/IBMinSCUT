@@ -1,53 +1,75 @@
-# NEFA Landing Page
+# Nuxt 3 Minimal Starter
 
-Free landing page template built using Nuxt 2 and Tailwindcss 3
+Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
-> [LIVE DEMO](https://nefa.vercel.app/)
+## Setup
 
-![Thumbnail](assets/img/thumbnail.jpg)
-
-## Project Structure
-
-.  
-├── assets  
-│ ├── css  
-│ └── img  
-├── components  
-│ └── base  
-├── layouts  
-├── mixins  
-├── pages  
-├── plugins  
-├── static  
-├── README.md  
-├── nuxt.config.js  
-├── package.json  
-└── tailwind.config.js  
-
-## Getting Started
+Make sure to install the dependencies:
 
 ```bash
-# clone this repository or click 'use this template' button
-$ git clone https://github.com/RSurya99/nefa.git
+# npm
+npm install
 
-# install dependencies
-$ yarn install
+# pnpm
+pnpm install
 
-# serve with hot reload at localhost:3000
-$ yarn dev
+# yarn
+yarn install
 
-# build for production and launch server
-$ yarn build
-$ yarn start
-
-# generate static project
-$ yarn generate
+# bun
+bun install
 ```
 
-## Other version of NEFA
-- [React NEFA](https://github.com/hakimov-dev/nefa-react) by [Muhammadamin](https://github.com/hakimov-dev)
+## Development Server
 
-Use it for learn, but please don’t republish, redistribute, or resell the template.
+Start the development server on `http://localhost:3000`:
 
-Code by [rsurya99](https://github.com/rsurya99)  
-UI/UX by [irvanmoses](https://www.facebook.com/irvan.moses)
+```bash
+# npm
+npm run dev
+
+# pnpm
+pnpm run dev
+
+# yarn
+yarn dev
+
+# bun
+bun run dev
+```
+
+## Production
+
+Build the application for production:
+
+```bash
+# npm
+npm run build
+
+# pnpm
+pnpm run build
+
+# yarn
+yarn build
+
+# bun
+bun run build
+```
+
+Locally preview production build:
+
+```bash
+# npm
+npm run preview
+
+# pnpm
+pnpm run preview
+
+# yarn
+yarn preview
+
+# bun
+bun run preview
+```
+
+Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
