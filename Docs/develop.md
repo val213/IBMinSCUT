@@ -20,7 +20,8 @@ DB_PASSWORD=your_db_password
 ### 数据库表初始化
 目前采取的策略是开发者在本地使用 `backend\TableSQL\CreateTable.sql` 中的 `.sql` 文件创建数据库表，然后在本地运行后端服务，进行开发和测试。
 你可以将这个脚本复制到 mysql workbench 中的query console 打开，然后点击这个小闪电运行，就可以更新你的数据库表了。
-![alt text](https://github.com/val213/IBMinSCUT/Docs/image.png?raw=true)
+![alt text](https://github.com/val213/IBMinSCUT/blob/main/Docs/image.png?raw=true)
+
 更新好之后在 idea 里面刷新一下数据库，就可以看到新的表了。
 
 # 前端
