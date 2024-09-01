@@ -5,7 +5,6 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import com.example.backend.mapper.UserMapper;
-// @MapperScan(value = "com.example.backend.mapper")
 
 @MapperScan("com.example.backend.mapper")
 @SpringBootApplication
