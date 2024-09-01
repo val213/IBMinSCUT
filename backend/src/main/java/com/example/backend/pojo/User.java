@@ -29,7 +29,17 @@ public class User {
     @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME")
     private Date createdAt;
 
+    @Column(name = "update_time", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    private Date updateTime;
 
+    @Column(name = "role_list", nullable = true, length = 255)
+    private String roleList;
+
+    @Column(name = "current_role", nullable =true, length = 50)
+    private String currentRole;
+
+    @Column(name = "department_id", nullable =true, length = 19)
+    private String departmentId;
 
 
     // 无参构造函数
@@ -42,7 +52,11 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.roleList = roleList;
+        this.currentRole = currentRole;
+        this.departmentId = departmentId;
         this.createdAt = new Date(); // 默认使用当前时间
+        this.updateTime = new Date(); // 默认使用当前时间
     }
 
     // Getter 与 Setter 方法
@@ -72,14 +86,14 @@ public class User {
         this.email = email;
     }
 
-//    public String getPassword() {
-//        return password;
-//    }
-//
-//    public void setPassword(String password) {
-//        this.password = password;
-//    }
-//
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public Date getCreatedAt() {
         return createdAt;
     }
@@ -88,14 +102,52 @@ public class User {
         this.createdAt = createdAt;
     }
 
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(String roleList) {
+        this.roleList = roleList;
+    }
+
+    public String getCurrentRole() {
+        return currentRole;
+    }
+
+    public void setCurrentRole(String currentRole) {
+        this.currentRole = currentRole;
+    }
+
+    public String getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(String departmentId) {
+        this.departmentId = departmentId;
+    }
+
+
     // toString 方法，隐藏密码以保护隐私
     @Override
     public String toString() {
         return "User{" +
-
+                "id=" + id +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + (password != null ? "*******" : null) + '\'' +
+                ", createdAt=" + createdAt +
+                ", updateTime=" + updateTime +
+                ", roleList='" + roleList + '\'' +
+                ", currentRole='" + currentRole + '\'' +
+                ", departmentId='" + departmentId + '\'' +
                 '}';
     }
 
@@ -105,14 +157,17 @@ public class User {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         User user = (User) obj;
-        return
+        return Objects.equals(id, user.id) &&
                 Objects.equals(username, user.username) &&
-                        Objects.equals(email, user.email);
+                Objects.equals(email, user.email) &&
+                Objects.equals(roleList, user.roleList) &&
+                Objects.equals(currentRole, user.currentRole) &&
+                Objects.equals(departmentId, user.departmentId);
     }
 
     // hashCode 方法，用于集合中的哈希存储
     @Override
     public int hashCode() {
-        return Objects.hash( username, email);
+        return Objects.hash(id, username, email, roleList, currentRole, departmentId);
     }
 }
