@@ -38,6 +38,18 @@ public class Result{
     public static Result success(String msg){
         return new Result(1,msg,null);
     }
+
+    public static Result failure(Object data) {
+        return new Result(0, "failure", data);
+    }
+
+    public static Result failure() {
+        return new Result(0, "failure", null);
+    }
+
+    public static Result failure(String msg) {
+        return new Result(0, msg, null);
+    }
 }
  
  

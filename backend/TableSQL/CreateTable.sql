@@ -46,3 +46,10 @@ insert into user (id, username, email, password, role_list, current_role, depart
 insert into event (id, name, start_time, end_time, comment) values ('1', '活动1', '2021-06-01 00:00:00', '2021-06-02 00:00:00', '活动1备注');
 insert into event (id, name, start_time, end_time, comment) values ('2', '活动2', '2021-06-03 00:00:00', '2021-06-04 00:00:00', '活动2备注');
 insert into event (id, name, start_time, end_time, comment) values ('3', '活动3', '2021-06-05 00:00:00', '2021-06-06 00:00:00', '活动3备注');
+
+
+ALTER TABLE user MODIFY password VARCHAR(255);
+ALTER TABLE user MODIFY id INT AUTO_INCREMENT;
+ALTER TABLE user MODIFY role_list VARCHAR(255) DEFAULT '';
+ALTER TABLE user MODIFY current_role VARCHAR(50) DEFAULT '';
+ALTER TABLE user MODIFY department_id VARCHAR(19) DEFAULT '';

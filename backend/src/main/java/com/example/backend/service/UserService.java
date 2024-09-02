@@ -10,4 +10,8 @@ import org.springframework.stereotype.Service;
 public interface UserService {
     
     List<User> list();
+    boolean isUsernameExists(String username);
+    boolean isPasswordValid(String password);
+    String encodePassword(String password);
+    User registerNewUser(String username, String encodedPassword, String email);
 }
