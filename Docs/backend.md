@@ -30,3 +30,10 @@ ALTER TABLE user MODIFY role_list VARCHAR(255) DEFAULT '';
 ALTER TABLE user MODIFY current_role VARCHAR(50) DEFAULT '';
 ALTER TABLE user MODIFY department_id VARCHAR(19) DEFAULT '';
 
+# 用户登录
+1.接收前端传送的用户名和密码，post请求
+2.在数据库中查找对应的用户记录，select from
+3.验证密码是否正确，比较加密后的密码是否一致
+（登录的时候发现注册功能中的密码加密执行了两次，导致登录验证一直出错，已解决）
+4.如果验证成功，生成 JWT 令牌并返回给前端。
+5.如果验证失败，返回错误消息：401登录失败
