@@ -39,7 +39,7 @@ jobs:
 
     - name: Initialize database
       run: |
-        mysql -h 127.0.0.1 -u root -proot test < backend/TableSQL/CreateTable.sql
+        mysql -h 127.0.0.1 -u root -proot ibminscut < backend/TableSQL/CreateTable.sql
 
     - name: Build and test Java backend
       run: mvn -B package --file backend/pom.xml
