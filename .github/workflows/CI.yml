@@ -10,12 +10,18 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    timeout-minutes: 5  # 设置超时时间为5分钟
 
     services:
       mysql:
-        image: mysql:8.0
+        image: mysql:8.2
         ports:
           - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
         env:
           MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
           MYSQL_DATABASE: ibminscut
@@ -38,6 +44,9 @@ jobs:
           echo "Waiting for MySQL..."
           sleep 2
         done
+
+    - name: Check MySQL logs
+      run: docker logs $(docker ps -q --filter "ancestor=mysql:8.2")
 
     - name: Initialize database
       run: |
