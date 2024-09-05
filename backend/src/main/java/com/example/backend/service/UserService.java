@@ -10,4 +10,14 @@ import org.springframework.stereotype.Service;
 public interface UserService {
     
     List<User> list();
+    boolean isUsernameExists(String username);
+    boolean isPasswordValid(String password);
+    String encodePassword(String password);
+    User registerNewUser(String username, String encodedPassword, String email);
+
+    // 验证用户凭据
+    boolean validateUserCredentials(String username, String password);
+
+    // 生成 JWT 令牌
+    String generateJwtToken(String username);
 }
