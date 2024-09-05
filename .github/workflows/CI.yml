@@ -34,7 +34,10 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
-
+    - name: Set environment variables
+      run: |
+        echo "DB_USER=${{ secrets.DB_USER }}" >> $GITHUB_ENV
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
     - name: Wait for MySQL to be ready
       run: |
         while ! mysqladmin ping -h"127.0.0.1" --silent; do
@@ -50,7 +53,7 @@ jobs:
         mysql -h 127.0.0.1 -u root -p${{ secrets.DB_PASSWORD }} ibminscut < backend/TableSQL/CreateTable.sql
 
     - name: Build and test Java backend
-      run: mvn -B package --file backend/pom.xml -e -X
+      run: mvn -B package --file backend/pom.xml
 
     - name: Upload Surefire reports
       if: failure()
