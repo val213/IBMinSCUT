@@ -1,5 +1,7 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.LoginRequestDto;
+import com.example.backend.dto.LoginResponseDto;
 import com.example.backend.pojo.User;
 import com.example.backend.service.UserService;
 import com.example.backend.pojo.Result;
@@ -11,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;// 换了一个logger类的库
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
@@ -21,7 +24,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-     private static final Logger log=LoggerFactory.getLogger(UserController.class);
+     public static final Logger log=LoggerFactory.getLogger(UserController.class);
 
      @GetMapping("/user")
      public Result list(){
@@ -44,8 +47,7 @@ public class UserController {
                 return ResponseEntity.badRequest().body(Result.failure("密码不符合要求"));
             }
 
-            String encodedPassword = userService.encodePassword(user.getPassword());
-            User registeredUser = userService.registerNewUser(user.getUsername(), encodedPassword, user.getEmail());
+            User registeredUser = userService.registerNewUser(user.getUsername(), user.getPassword(), user.getEmail());
             return ResponseEntity.ok(Result.success("用户注册成功"));
         } catch (Exception e) {
             log.error("注册用户时发生错误", e);
@@ -53,4 +55,25 @@ public class UserController {
         }
     }
 
+
+    // 接收前端信息，验证，完成登录
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> loginUser(@RequestBody LoginRequestDto loginRequest) {
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
+
+        if (userService.validateUserCredentials(username, password)) {
+            String jwtToken = userService.generateJwtToken(username);// 生成JWT令牌
+            LoginResponseDto responseDto = new LoginResponseDto();
+            responseDto.setToken(jwtToken);// JWT令牌封装给responsedto，返回给前端
+            log.info("Login successful, JWT generated for user: " + username);
+            return ResponseEntity.ok(responseDto);
+        } else {
+            log.warn("Login failed for user: " + username);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+    }
 }
+
+
+
