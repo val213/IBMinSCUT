@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.EventDto;
 import com.example.backend.pojo.Result;
 import com.example.backend.service.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,8 @@ public class EventController {
     @Autowired
     private EventService eventService;
     @PostMapping("/events/create")
-    public Result createEvent() {
-        return eventService.createEvent();
+    public Result createEvent(@RequestBody EventDto eventdto) {
+        return eventService.createEvent(eventdto);
     }
     @GetMapping("/events")
 //    @PreAuthorized
@@ -23,9 +24,9 @@ public class EventController {
     public Result getEventDetail(@PathVariable int eventId) {
         return eventService.getEventDetail(eventId);
     }
-    @PostMapping("/events/{eventId}")
-    public Result updateEvent(@PathVariable int eventId) {
-        return eventService.updateEvent(eventId);
+    @PutMapping("/events/{eventId}")
+    public Result updateEvent(@PathVariable int eventId, @RequestBody EventDto eventdto) {
+        return eventService.updateEvent(eventId, eventdto);
     }
     @DeleteMapping("/events/{eventId}")
     public Result deleteEvent(@PathVariable int eventId) {
