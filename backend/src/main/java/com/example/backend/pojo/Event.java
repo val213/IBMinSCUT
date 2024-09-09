@@ -33,19 +33,19 @@ public class Event implements Serializable {
      * 创建日期
      */
     @TableField("create_at")
-    private Date create_at;
+    private Date createAt;
 
     /**
      * 开始日期
      */
     @TableField("start_time")
-    private Date start_time;
+    private Date startAt;
 
     /**
      * 结束日期
      */
     @TableField("end_time")
-    private Date end_time;
+    private Date endAt;
 
     /**
      * 活动备注

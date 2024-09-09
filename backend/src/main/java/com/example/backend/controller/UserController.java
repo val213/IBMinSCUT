@@ -43,7 +43,7 @@ public class UserController {
             if (userService.isUsernameExists(user.getUsername())) {
                 return ResponseEntity.badRequest().body(Result.failure("用户名已存在"));
             }
-            if (!userService.isPasswordValid(user.getPassword())) {
+            if (userService.isPasswordValid(user.getPassword())) {
                 return ResponseEntity.badRequest().body(Result.failure("密码不符合要求"));
             }
 
