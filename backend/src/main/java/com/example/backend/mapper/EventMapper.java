@@ -10,6 +10,5 @@ import java.util.List;
 
 @Mapper
 public interface EventMapper extends BaseMapper<Event> {
-    @Select("select * from event")
-    List<Event> getEvents();
+
 }

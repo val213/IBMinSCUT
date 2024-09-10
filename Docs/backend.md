@@ -46,3 +46,17 @@ ALTER TABLE user MODIFY department_id VARCHAR(19) DEFAULT '';
 5.更新数据库中的用户信息。
 6.返回更新成功的消息。
 
+
+# events 事件管理模块
+api路径：`/api/events`，具体请参见接口文档。
+该模块包含了几个简单的增删改查接口：
+- 获取所有事件列表，包含基本信息
+- 获取指定事件的详细信息
+- 添加事件
+- 删除事件
+- 更新事件 
+
+## dto
+- EventDto：用于与前端进行事件数据的传输
+- EventSimpleDto：用于返回给前端的事件基本信息，主要在获取事件列表时使用
+
