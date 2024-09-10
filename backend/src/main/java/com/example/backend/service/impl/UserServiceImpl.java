@@ -40,6 +40,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+   public boolean isEmailValid(String email){
+        return email.contains("@");
+    }
+    @Override
+    public void updateUser(User user) {
+        userMapper.updateUser(user);  // 调用数据访问层来更新用户
+    }
+    @Override
     public String encodePassword(String password) {
         return passwordEncoder.encode(password);// 密码加密
     }
@@ -78,6 +86,12 @@ public class UserServiceImpl implements UserService {
     public String generateJwtToken(String username) {
         return jwtUtil.generateToken(username);// JwtUtil类中生成令牌的逻辑
     }
+
+    @Override
+    public User findByUsername(String username) {
+        return userMapper.findByUsername(username);
+    }
+
 }
 
 
