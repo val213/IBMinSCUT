@@ -2,10 +2,7 @@ package com.example.backend.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.backend.pojo.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -33,4 +30,6 @@ public interface UserMapper extends BaseMapper<User> {
     @Insert("INSERT INTO user (username, password, email) VALUES (#{username}, #{password}, #{email})")
     void insertUser(User user);
 
+    @Update("UPDATE user SET email = #{email}, password = #{password} WHERE username = #{username}")
+    void updateUser(User user);
 }
