@@ -5,24 +5,24 @@
         ref="ruleformref"
         label-width="auto" 
         size="large" 
-        :model="ruleform" 
+        :model="ruleForm" 
         :rules="rules"
         >
             <el-form-item label="请输入邮箱" prop="mail">
-                <el-input v-model="ruleform.mail" type="text" placeholder="mail" />
+                <el-input v-model="ruleForm.mail" type="text" placeholder="mail" />
             </el-form-item>
 
             <el-form-item label="请输入密码" prop="password">
-                <el-input v-model="ruleform.password" type="text" placeholder="password" show-password />
+                <el-input v-model="ruleForm.password" type="text" placeholder="password" show-password />
             </el-form-item>
 
             <el-form-item label="请再次输入密码" prop="confirm_password">
-                <el-input v-model="ruleform.confirm_password" type="text" placeholder="confirm_password" show-password />
+                <el-input v-model="ruleForm.confirmPassword" type="text" placeholder="confirm_password" show-password />
             </el-form-item>
 
             <el-form-item>
-                <el-button type="primary" plain @click="to_main" style="margin: 0 auto;">返回</el-button>
-                <el-button type="primary" @click="onsubmit(ruleformref)" style="margin: 0 auto;">更新</el-button>
+                <el-button type="primary" plain @click="toMain" style="margin: 0 auto;">返回</el-button>
+                <el-button type="primary" @click="onSubmit(ruleFormRef)" style="margin: 0 auto;">更新</el-button>
             </el-form-item>
 
         </el-form>
@@ -34,66 +34,66 @@
 <script setup lang="ts" name="UpdateProfile">
 import type { FormInstance, FormRules } from 'element-plus';
 
-const ruleformref=ref<FormInstance>()
+const ruleFormRef = ref<FormInstance>()
 
-const ruleform=reactive({
-    password:'',
-    confirm_password:'',
-    username:'',
-    mail:''
+const ruleForm = reactive({
+    password: '',
+    confirmPassword: '',
+    username: '',
+    mail: ''
 })
-
-const checkmail=(rule:any,value:any,callback:any)=>{
-    if(value===''){
+const checkMail = (rule: any, value: string, callback: (error?: Error) => void): void => {
+    if (value === '') {
         callback(new Error('请输入邮箱!'))
-    }else{
+    } else {
         callback()
     }
 }
 
-const checkpass=(rule:any,value:any,callback:any)=>{
-    if(value===''){
+const checkPass = (rule: any, value: string, callback: (error?: Error) => void): void => {
+    if (value === '') {
         callback(new Error('请输入密码!'))
-    }else{
-        if(ruleform.confirm_password!==''){
-            if (!ruleformref.value) return
-            ruleformref.value.validateField('comfirm_password')
+    } else {
+        if (ruleForm.confirmPassword !== '') {
+            if (!ruleFormRef.value) return
+            ruleFormRef.value.validateField('confirmPassword')
         }
         callback()
     }
 }
 
-const checkconfirm=(rule:any,value:any,callback:any)=>{
-    if(value===''){
+const checkConfirm = (rule: any, value: string, callback: (error?: Error) => void): void => {
+    if (value === '') {
         callback(new Error('请再次输入密码!'))
-    }else if(value!==ruleform.password){
+    } else if (value !== ruleForm.password) {
         callback(new Error('两次输入密码不一致!'))
-    }else{
+    } else {
         callback()
     }
 }
 
-const rules = reactive<FormRules<typeof ruleform>>({
-  password: [{ validator: checkpass, trigger: 'blur' }],
-  confirm_password: [{ validator: checkconfirm, trigger: 'blur' }],
-  mail: [{ validator: checkmail, trigger: 'blur' }]
+const rules = reactive<FormRules<typeof ruleForm>>({
+    password: [{ validator: checkPass, trigger: 'blur' }],
+    confirmPassword: [{ validator: checkConfirm, trigger: 'blur' }],
+    mail: [{ validator: checkMail, trigger: 'blur' }]
 })
 
-const onsubmit=(formEl:FormInstance|undefined)=>{
-   if(!formEl){
-    return
-   }
-   formEl.validate((valid) => {
-    if (valid) {
-      //调用更新api执行更新逻辑，同时检查后台是否已有该账号
-      navigateTo("/userprofile")
-    } else {
-        ElMessageBox.alert('请确认需要更新的信息正确!', '提示')
+const onSubmit = (formEl: FormInstance | undefined): void => {
+    if (!formEl) {
+        return
     }
-  })
+    formEl.validate((valid) => {
+        if (valid) {
+            // 调用更新 API 执行更新逻辑，同时检查后台是否已有该账号,还没写
+            navigateTo('/userprofile')
+        } else {
+            ElMessageBox.alert('请确认需要更新的信息正确!', '提示')
+        }
+    })
 }
-const to_main=()=>{
-    navigateTo("/")
+
+const toMain = (): void => {
+    navigateTo('/')
 }
 </script>
 

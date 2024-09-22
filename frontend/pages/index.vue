@@ -3,7 +3,7 @@
         <header>
             <Navbar/>
         </header>
-        <Login v-if="ifLogin.if_login===true"/>
+        <Login v-if="ifLogin.ifLogin===true"/>
     </div>
    
 </template>

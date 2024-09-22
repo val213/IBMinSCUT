@@ -32,22 +32,21 @@ import {ref} from 'vue'
 import {useIfLogin} from '@/store/ifLogin'
 import { useIfLogined } from '~/store/ifLogined'
 
-const ifLogined=useIfLogined()
-const ifLogin=useIfLogin()
+const ifLogined = useIfLogined()
+const ifLogin = useIfLogin()
 
+const username = ref<string>('')
+const password = ref<string>('')
 
-const closemodal=()=>{
-    ifLogin.if_login=false
+const closemodal = (): void => {
+    ifLogin.ifLogin = false
 }
 
-let username=ref('')
-let password=ref('')
-const onsubmit=()=>{
-    if(username&&password.value){
-        ifLogin.if_login=false
-        ifLogined.if_logined=true
-    }
-    else{
+const onsubmit = (): void => {
+    if (username.value && password.value) {
+        ifLogin.ifLogin = false
+        ifLogined.ifLogined = true
+    } else {
         ElMessageBox.alert('请输入完整信息!', '提示')
     }
 }

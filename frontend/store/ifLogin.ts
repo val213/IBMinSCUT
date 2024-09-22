@@ -1,8 +1,8 @@
 import {defineStore} from 'pinia'
 
 export const useIfLogin = defineStore('iflogin', ()=>{
-    let if_login:boolean = false
+    let ifLogin:boolean = false
     return {
-        if_login
+        ifLogin
     }
 })
