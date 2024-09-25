@@ -37,7 +37,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: vue-build
-        path: frontend/.output/**
+        path: .output
 
   deploy:
     runs-on: ubuntu-latest
