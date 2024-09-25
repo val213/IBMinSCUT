@@ -29,10 +29,18 @@ jobs:
         cd frontend
         npm run build
 
+    - name: List build directory (for debugging)
+      run: |
+        ls -la frontend/.output
+
     - name: Compress build artifacts
       run: |
         cd frontend
         tar -czf vue-build.tar.gz .output
+
+    - name: List compressed file (for debugging)
+      run: |
+        ls -la frontend/vue-build.tar.gz
 
     - name: Upload Vue build artifacts
       uses: actions/upload-artifact@v3
@@ -52,18 +60,24 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: vue-build
-        path: .
+        path: vue-build.tar.gz
 
     - name: Decompress build artifacts
       run: |
         tar -xzf vue-build.tar.gz -C frontend
 
+    - name: List decompressed artifacts (for debugging)
+      run: |
+        ls -la frontend/.output
+
     - name: Deploy Vue frontend
       env:
         SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+        SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       run: |
         echo "$SSH_PRIVATE_KEY" > deploy_key
         chmod 600 deploy_key
-        scp -o StrictHostKeyChecking=no -i deploy_key -r frontend/.output/* ibm@123.207.71.173:/usr/share/nginx/html/ibminscut
-        ssh -o StrictHostKeyChecking=no -i deploy_key ibm@123.207.71.173 'sudo chown -R www-data:www-data /usr/share/nginx/html/ibminscut && sudo chmod -R 755 /usr/share/nginx/html/ibminscut'
+        ssh -o StrictHostKeyChecking=no -i deploy_key ibm@123.207.71.173 'echo "$SSH_PASSWORD" | sudo -S mkdir -p /usr/share/nginx/html/ibminscut && echo "$SSH_PASSWORD" | sudo -S chown -R ibm:ibm /usr/share/nginx/html/ibminscut && echo "$SSH_PASSWORD" | sudo -S chmod -R 777 /usr/share/nginx/html/ibminscut' || { echo 'SSH command failed'; exit 1; }
+        scp -o StrictHostKeyChecking=no -i deploy_key frontend/vue-build.tar.gz ibm@123.207.71.173:/tmp/vue-build.tar.gz || { echo 'SCP failed'; exit 1; }
+        ssh -o StrictHostKeyChecking=no -i deploy_key ibm@123.207.71.173 'echo "$SSH_PASSWORD" | sudo -S tar -xzf /tmp/vue-build.tar.gz -C /usr/share/nginx/html/ibminscut && echo "$SSH_PASSWORD" | sudo -S chown -R www-data:www-data /usr/share/nginx/html/ibminscut && echo "$SSH_PASSWORD" | sudo -S chmod -R 755 /usr/share/nginx/html/ibminscut && rm /tmp/vue-build.tar.gz' || { echo 'SSH command failed'; exit 1; }
         rm deploy_key
