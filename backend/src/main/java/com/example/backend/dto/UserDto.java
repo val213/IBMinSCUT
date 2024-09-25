@@ -1,10 +1,14 @@
 package com.example.backend.dto;
 
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 public class UserDto {
     private String email;
     private String username;
     private String password;//存储封装用户提交的用户名与密码
+    private Date createdAt;
 
     //构造函数，允许用户初始化账户名、密码、邮箱
     public UserDto(){}
@@ -15,10 +19,7 @@ public class UserDto {
     }
 
     // Getter与Setter
-    public String getUsername()
-    {
-        return username;
-    }
+    public String getUsername() {return username;}
     public void setUsername(String username)
     {
         this.username=username;
@@ -39,6 +40,8 @@ public class UserDto {
     {
         this.email=email;
     }
+    public Date getCreatedAt() {return createdAt;}
+    public void setCreatedAt(Date createdAt) {this.createdAt = createdAt;}
 
 
     @Override//打印UserDto对象时提供字符串表示，并保护隐私

@@ -14,11 +14,6 @@ import java.util.Date;
 @NoArgsConstructor
 public class EventDto extends Event {
     /**
-     * 活动ID
-     */
-    private String id;
-
-    /**
      * 活动名称
      */
     private String name;
@@ -39,14 +34,23 @@ public class EventDto extends Event {
     private Date end_time;
 
     /**
+     * 活动备注
+     */
+    private String comment;
+
+    /**
+     * 活动状态
+     */
+    private int status;
+
+    /**
      * 将一个Game对象转换为 EventDto 对象。EventDto 对象通常用于在不同层之间传输数据，它只包含必要的数据，而不包含业务逻辑。
      */
     public EventDto(Event event){
-        this.setId(event.getId());
         this.setName(event.getName());
-        this.setCreate_at(event.getCreate_at());
-        this.setStart_time(event.getStart_time());
-        this.setEnd_time(event.getEnd_time());
+        this.setCreate_at(event.getCreateAt());
+        this.setStart_time(event.getStartAt());
+        this.setEnd_time(event.getEndAt());
         this.setComment(event.getComment());
         this.setStatus(event.getStatus());
     }
