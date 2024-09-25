@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
 
     steps:
     - name: Checkout repository
@@ -20,29 +23,29 @@ jobs:
         node-version: '18'
 
     - name: Install dependencies
-      run: |
-        cd frontend
-        npm install
+      run: npm install
 
     - name: Build Vue frontend
-      run: |
-        cd frontend
-        npm run build
+      run: npm run build
 
     - name: List build directory (for debugging)
-      run: |
-        ls -la frontend/.output
+      run: ls -la .output
+
+    - name: Compress build artifacts
+      run: tar -czf vue-build.tar.gz .output
 
     - name: Upload Vue build artifacts
       uses: actions/upload-artifact@v3
       with:
-        include-hidden-files: true
         name: vue-build
-        path: frontend/.output/**
+        path: vue-build.tar.gz
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
+    defaults:
+      run:
+        working-directory: frontend
 
     steps:
     - name: Checkout repository
@@ -52,11 +55,13 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: vue-build
-        path: frontend/.output
+        path: vue-build.tar.gz
 
-    - name: List downloaded artifacts (for debugging)
-      run: |
-        ls -la frontend/.output
+    - name: Decompress build artifacts
+      run: tar -xzf vue-build.tar.gz
+
+    - name: List decompressed artifacts (for debugging)
+      run: ls -la .output
 
     - name: Deploy Vue frontend
       env:
@@ -64,5 +69,6 @@ jobs:
       run: |
         echo "$SSH_PRIVATE_KEY" > deploy_key
         chmod 600 deploy_key
-        scp -o StrictHostKeyChecking=no -i deploy_key -r frontend/.output/* ibm@123.207.71.173:/usr/share/nginx/html/ibminscut
+        ssh -o StrictHostKeyChecking=no -i deploy_key ibm@123.207.71.173 'sudo mkdir -p /usr/share/nginx/html/ibminscut && sudo chown -R ibm:ibm /usr/share/nginx/html/ibminscut' || { echo 'SSH command failed'; exit 1; }
+        scp -o StrictHostKeyChecking=no -i deploy_key -r .output/* ibm@123.207.71.173:/usr/share/nginx/html/ibminscut || { echo 'SCP failed'; exit 1; }
         rm deploy_key
