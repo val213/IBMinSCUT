@@ -29,18 +29,10 @@ jobs:
         cd frontend
         npm run build
 
-    - name: List build directory (for debugging)
-      run: |
-        ls -la frontend/.output
-
     - name: Compress build artifacts
       run: |
         cd frontend
         tar -czf vue-build.tar.gz .output
-
-    - name: List compressed file (for debugging)
-      run: |
-        ls -la frontend/vue-build.tar.gz
 
     - name: Upload Vue build artifacts
       uses: actions/upload-artifact@v3
@@ -60,15 +52,11 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: vue-build
-        path: vue-build.tar.gz
+        path: .
 
     - name: Decompress build artifacts
       run: |
         tar -xzf vue-build.tar.gz -C frontend
-
-    - name: List decompressed artifacts (for debugging)
-      run: |
-        ls -la frontend/.output
 
     - name: Deploy Vue frontend
       env:
