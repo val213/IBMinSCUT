@@ -60,12 +60,11 @@ jobs:
       uses: actions/download-artifact@v3
       with:
         name: vue-build
-        path: frontend/vue-build.tar.gz
+        path: vue-build.tar.gz
 
     - name: Decompress build artifacts
       run: |
-        cd frontend
-        tar -xzf vue-build.tar.gz
+        tar -xzf vue-build.tar.gz -C frontend
 
     - name: List decompressed artifacts (for debugging)
       run: |
