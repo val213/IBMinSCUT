@@ -1,0 +1,45 @@
+name: Deploy Vue Frontend
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Install dependencies
+      run: |
+        cd frontend
+        npm install
+
+    - name: Build Vue frontend
+      run: |
+        cd frontend
+        npm run build
+
+    - name: Upload Vue build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: vue-build
+        path: frontend/dist
+
+    - name: Deploy Vue frontend
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > deploy_key
+        chmod 600 deploy_key
+        scp -i deploy_key -r frontend/dist/* user@server:/path/to/deploy
+        rm deploy_key

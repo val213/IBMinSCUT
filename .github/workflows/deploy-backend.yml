@@ -1,0 +1,37 @@
+name: Deploy Java Backend
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Download Java build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: java-build
+        path: backend/target
+
+    - name: Deploy Java backend
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+      run: |
+        echo "$SSH_PRIVATE_KEY" > deploy_key
+        chmod 600 deploy_key
+        scp -i deploy_key -r backend/target/*.jar user@server:/opt/myapp || { echo 'SCP failed'; exit 1; }
+        ssh -i deploy_key user@server 'bash /opt/myapp/deploy.sh' || { echo 'SSH command failed'; exit 1; }
+        rm deploy_key

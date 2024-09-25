@@ -1,0 +1,31 @@
+name: Build Vue Frontend
+
+on:
+  push:
+    branches: [ "main" ,"feature/*"]
+  pull_request:
+    branches: [ "main" ,"feature/*"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+
+    - name: Install dependencies and build Vue frontend
+      run: |
+        cd frontend
+        npm install
+        npm run build
+
+    - name: Upload Vue build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: vue-build
+        path: frontend/dist
