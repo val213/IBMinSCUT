@@ -1,9 +1,22 @@
 package com.example.backend.pojo;
 
+
+import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+
 import javax.persistence.*;
+
 import java.util.Date;
 import java.util.Objects;
 
+@Getter
 @Entity
 @Table(name = "user") // 映射到数据库中的 "user" 表
 public class User {
@@ -61,73 +74,37 @@ public class User {
 
     // Getter 与 Setter 方法
 
-    public Long getId() {
-        return id;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
 
 
-    public String getUsername() {
-        return username;
-    }
-
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
     }
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public String getRoleList() {
-        return roleList;
     }
 
     public void setRoleList(String roleList) {
         this.roleList = roleList;
     }
 
-    public String getCurrentRole() {
-        return currentRole;
-    }
-
     public void setCurrentRole(String currentRole) {
         this.currentRole = currentRole;
-    }
-
-    public String getDepartmentId() {
-        return departmentId;
     }
 
     public void setDepartmentId(String departmentId) {

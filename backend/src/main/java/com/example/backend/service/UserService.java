@@ -12,6 +12,7 @@ public interface UserService {
     List<User> list();
     boolean isUsernameExists(String username);
     boolean isPasswordValid(String password);
+    boolean isEmailValid(String email);
     String encodePassword(String password);
     User registerNewUser(String username, String encodedPassword, String email);
 
@@ -20,4 +21,8 @@ public interface UserService {
 
     // 生成 JWT 令牌
     String generateJwtToken(String username);
+
+    User findByUsername(String username); // 根据用户名查找用户信息
+
+    void updateUser(User user);
 }

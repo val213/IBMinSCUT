@@ -6,7 +6,6 @@ import com.example.backend.service.UserService;
 import com.example.backend.util.JwtUtil;
 import java.util.List;
 
-import com.example.backend.util.JwtUtil;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,9 +36,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isPasswordValid(String password) {
         // 这里可以添加更复杂的密码验证逻辑
-        return password != null;
+        return password == null;
     }
 
+    @Override
+   public boolean isEmailValid(String email){
+        return email.contains("@");
+    }
+    @Override
+    public void updateUser(User user) {
+        userMapper.updateUser(user);  // 调用数据访问层来更新用户
+    }
     @Override
     public String encodePassword(String password) {
         return passwordEncoder.encode(password);// 密码加密
@@ -50,7 +57,7 @@ public class UserServiceImpl implements UserService {
         if (isUsernameExists(username)) {
             throw new IllegalArgumentException("用户名已存在");
         }
-        if (!isPasswordValid(password)) {
+        if (isPasswordValid(password)) {
             throw new IllegalArgumentException("密码不符合要求");
         }
         String encodedPassword = encodePassword(password);
@@ -79,6 +86,12 @@ public class UserServiceImpl implements UserService {
     public String generateJwtToken(String username) {
         return jwtUtil.generateToken(username);// JwtUtil类中生成令牌的逻辑
     }
+
+    @Override
+    public User findByUsername(String username) {
+        return userMapper.findByUsername(username);
+    }
+
 }
 
 
