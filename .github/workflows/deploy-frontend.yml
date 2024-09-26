@@ -67,20 +67,36 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
         run: |
+          # 打印 SSH 私钥的路径和内容
           echo "$SSH_PRIVATE_KEY" > deploy_key
+          ls -la deploy_key
           chmod 600 deploy_key
-          scp -o StrictHostKeyChecking=no -i deploy_key nuxt-build.tar.gz ibm@123.207.71.173:/tmp/nuxt-build.tar.gz || { echo 'SCP failed'; exit 1; }
-          ssh -o StrictHostKeyChecking=no -i deploy_key ibm@123.207.71.173 '
-            export NVM_DIR="$HOME/.nvm" &&
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" &&
-            nvm use 16.20.2 &&
-            sudo -E mkdir -p /usr/share/nginx/html/ibminscut &&
-            sudo -E tar -xzf /tmp/nuxt-build.tar.gz -C /usr/share/nginx/html/ibminscut &&
-            sudo -E chown -R www-data:www-data /usr/share/nginx/html/ibminscut &&
-            sudo -E chmod -R 755 /usr/share/nginx/html/ibminscut &&
-            rm /tmp/nuxt-build.tar.gz &&
-            cd /usr/share/nginx/html/ibminscut &&
-            sudo -E /home/ibm/.nvm/versions/node/v16.20.2/bin/npm install --production &&
-            sudo -E /home/ibm/.nvm/versions/node/v16.20.2/bin/pm2 start /usr/share/nginx/html/ibminscut/ecosystem.config.js
+
+          # 使用 SSH 连接到服务器
+          ssh -o StrictHostKeyChecking=no -i deploy_key ibm@123.207.71.173
+
+          # 设置 NVM 目录和加载 nvm
+          echo "Loading NVM"
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+          # 打印 Node.js 版本以检查是否切换到了正确版本
+          echo "Current Node.js version:"
+          node --version
+
+          # 使用指定版本的 Node.js
+          nvm use 16.20.2
+
+          # 打印当前 Node.js 版本以确认
+          echo "After using 'nvm use 16.20.2':"
+          node --version
+          sudo -E mkdir -p /usr/share/nginx/html/ibminscut &&
+          sudo -E tar -xzf /tmp/nuxt-build.tar.gz -C /usr/share/nginx/html/ibminscut &&
+          sudo -E chown -R www-data:www-data /usr/share/nginx/html/ibminscut &&
+          sudo -E chmod -R 755 /usr/share/nginx/html/ibminscut &&
+          rm /tmp/nuxt-build.tar.gz &&
+          cd /usr/share/nginx/html/ibminscut &&
+          sudo -E /home/ibm/.nvm/versions/node/v16.20.2/bin/npm install --production &&
+          sudo -E /home/ibm/.nvm/versions/node/v16.20.2/bin/pm2 start /usr/share/nginx/html/ibminscut/ecosystem.config.js
           ' || { echo 'SSH command failed'; exit 1; }
           rm deploy_key
