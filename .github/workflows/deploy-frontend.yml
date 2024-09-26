@@ -1,4 +1,4 @@
-name: Build and Deploy Nuxt Frontend
+name: Build and Deploy Nuxt Frontend (SPA)
 
 on:
   push:
@@ -23,20 +23,25 @@ jobs:
         run: |
           cd frontend
           npm install
-      - name: Build Nuxt frontend
+
+      - name: Build Nuxt frontend (SPA)
         run: |
           cd frontend
           npm run build
+
       - name: List build directory (for debugging)
         run: |
-          ls -la frontend/.nuxt
+          ls -la frontend/.output
+
       - name: Compress build artifacts
         run: |
           cd frontend
-          tar -czf nuxt-build.tar.gz .nuxt static nuxt.config.js package.json
+          tar -czf nuxt-build.tar.gz .output nuxt.config.ts package.json assets
+
       - name: List compressed file (for debugging)
         run: |
           ls -la frontend/nuxt-build.tar.gz
+
       - name: Upload Nuxt build artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -57,7 +62,7 @@ jobs:
           name: nuxt-build
           path: .
 
-      - name: Deploy Nuxt frontend
+      - name: Deploy Nuxt frontend (SPA)
         env:
           SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
           SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
@@ -65,6 +70,7 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > deploy_key
           chmod 600 deploy_key
           scp -o StrictHostKeyChecking=no -i deploy_key nuxt-build.tar.gz ibm@123.207.71.173:/tmp/nuxt-build.tar.gz || { echo 'SCP failed'; exit 1; }
+          scp -o StrictHostKeyChecking=no -i deploy_key ecosystem.config.js ibm@123.207.71.173:/tmp/ecosystem.config.js || { echo 'SCP failed'; exit 1; }
           ssh -o StrictHostKeyChecking=no -i deploy_key ibm@123.207.71.173 '
             export NVM_DIR="$HOME/.nvm" &&
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" &&
@@ -76,6 +82,7 @@ jobs:
             rm /tmp/nuxt-build.tar.gz &&
             cd /usr/share/nginx/html/ibminscut &&
             echo "$SSH_PASSWORD" | sudo -S npm install --production &&
-            pm2 restart nuxt-app || pm2 start npm --name "nuxt-app" -- run start
+            echo "$SSH_PASSWORD" | sudo -S mv /tmp/ecosystem.config.js /usr/share/nginx/html/ibminscut/ecosystem.config.js &&
+            echo "$SSH_PASSWORD" | sudo -S env "PATH=$PATH" pm2 start /usr/share/nginx/html/ibminscut/ecosystem.config.js
           ' || { echo 'SSH command failed'; exit 1; }
           rm deploy_key
