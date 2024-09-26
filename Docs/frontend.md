@@ -1,4 +1,4 @@
-#### **官网首页结构**
+#### 官网首页结构
 
 主要组件：首页App.vue，登录页面Login.vue，更新页面UpdateProfile.vue，注册页面Register.vue，信息展示页面UserProfile.vue，导航栏Navbar.vue。
 
