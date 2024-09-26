@@ -17,7 +17,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16.20.2'
+          node-version: '20.17.0'
 
       - name: Install dependencies
         run: |
@@ -85,10 +85,10 @@ jobs:
           node --version
 
           # 使用指定版本的 Node.js
-          nvm use 16.20.2
+          nvm use 20.17.0
 
           # 打印当前 Node.js 版本以确认
-          echo "After using 'nvm use 16.20.2':"
+          echo "After using 'nvm use 20.17.0':"
           node --version
           sudo -E mkdir -p /usr/share/nginx/html/ibminscut &&
           sudo -E tar -xzf /tmp/nuxt-build.tar.gz -C /usr/share/nginx/html/ibminscut &&
