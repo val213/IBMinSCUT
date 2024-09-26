@@ -14,21 +14,39 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: Login to DockerHub
-      uses: docker/login-action@v2
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
       with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+        node-version: '18'
 
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v3
+    - name: Install dependencies
+      run: |
+        cd frontend
+        npm install
+
+    - name: Build Nuxt frontend
+      run: |
+        cd frontend
+        npm run build
+
+    - name: List build directory (for debugging)
+      run: |
+        ls -la frontend/.output
+
+    - name: Compress build artifacts
+      run: |
+        cd frontend
+        tar -czf nuxt-build.tar.gz .output
+
+    - name: List compressed file (for debugging)
+      run: |
+        ls -la frontend/nuxt-build.tar.gz
+
+    - name: Upload Nuxt build artifacts
+      uses: actions/upload-artifact@v3
       with:
-        context: .
-        push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/nuxt-app:latest
+        name: nuxt-build
+        path: frontend/nuxt-build.tar.gz
 
   deploy:
     runs-on: ubuntu-latest
@@ -38,13 +56,20 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Deploy Docker container
+    - name: Download Nuxt build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: nuxt-build
+        path: .
+
+    - name: Deploy Nuxt frontend
       env:
         SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
         SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
       run: |
         echo "$SSH_PRIVATE_KEY" > deploy_key
         chmod 600 deploy_key
-        scp -o StrictHostKeyChecking=no -i deploy_key docker-compose.yml ibm@123.207.71.173:/tmp/docker-compose.yml || { echo 'SCP failed'; exit 1; }
-        ssh -o StrictHostKeyChecking=no -i deploy_key ibm@123.207.71.173 'echo "$SSH_PASSWORD" | sudo -S mv /tmp/docker-compose.yml /usr/share/nginx/html/ibminscut/docker-compose.yml && echo "$SSH_PASSWORD" | sudo -S docker-compose -f /usr/share/nginx/html/ibminscut/docker-compose.yml up -d' || { echo 'SSH command failed'; exit 1; }
+        scp -o StrictHostKeyChecking=no -i deploy_key nuxt-build.tar.gz ibm@123.207.71.173:/tmp/nuxt-build.tar.gz || { echo 'SCP failed'; exit 1; }
+        ssh -o StrictHostKeyChecking=no -i deploy_key ibm@123.207.71.173 'echo "$SSH_PASSWORD" | sudo -S mkdir -p /usr/share/nginx/html/ibminscut && echo "$SSH_PASSWORD" | sudo -S tar -xzf /tmp/nuxt-build.tar.gz -C /usr/share/nginx/html/ibminscut && echo "$SSH_PASSWORD" | sudo -S chown -R www-data:www-data /usr/share/nginx/html/ibminscut && echo "$SSH_PASSWORD" | sudo -S chmod -R 755 /usr/share/nginx/html/ibminscut && rm /tmp/nuxt-build.tar.gz' || { echo 'SSH command failed'; exit 1; }
+        ssh -o StrictHostKeyChecking=no -i deploy_key ibm@123.207.71.173 'cd /usr/share/nginx/html/ibminscut && npm install && pm2 restart nuxt-app || pm2 start npm --name "nuxt-app" -- run start' || { echo 'PM2 command failed'; exit 1; }
         rm deploy_key
