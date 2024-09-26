@@ -74,13 +74,13 @@ jobs:
             export NVM_DIR="$HOME/.nvm" &&
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" &&
             nvm use 16.20.2 &&
-            echo $SSH_PASSWORD | sudo -S mkdir -p /usr/share/nginx/html/ibminscut &&
-            echo $SSH_PASSWORD | sudo -S tar -xzf /tmp/nuxt-build.tar.gz -C /usr/share/nginx/html/ibminscut &&
-            echo $SSH_PASSWORD | sudo -S chown -R www-data:www-data /usr/share/nginx/html/ibminscut &&
-            echo $SSH_PASSWORD | sudo -S chmod -R 755 /usr/share/nginx/html/ibminscut &&
+            sudo -E mkdir -p /usr/share/nginx/html/ibminscut && echo "success" &&
+            sudo -E tar -xzf /tmp/nuxt-build.tar.gz -C /usr/share/nginx/html/ibminscut &&
+            sudo -E chown -R www-data:www-data /usr/share/nginx/html/ibminscut &&
+            sudo -E chmod -R 755 /usr/share/nginx/html/ibminscut &&
             rm /tmp/nuxt-build.tar.gz &&
             cd /usr/share/nginx/html/ibminscut &&
-            echo "$SSH_PASSWORD" | sudo -S npm install --production &&
-            echo "$SSH_PASSWORD" | sudo -S env "PATH=$PATH" pm2 start /usr/share/nginx/html/ibminscut/ecosystem.config.js
+            sudo -E npm install --production &&
+            sudo -E env "PATH=$PATH" pm2 start /usr/share/nginx/html/ibminscut/ecosystem.config.js
           ' || { echo 'SSH command failed'; exit 1; }
           rm deploy_key
