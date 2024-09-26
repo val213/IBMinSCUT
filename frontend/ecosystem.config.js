@@ -5,7 +5,7 @@ module.exports = {
    */
   apps: [
     {
-      name: 'my-nuxt-app', // 应用名称
+      name: 'uxt-app', // 应用名称
       script: 'nuxt.js',   // 启动脚本，对于 Nuxt.js 通常是 nuxt.js 或 nuxt-ts (如果使用 TypeScript)
       args: 'start',       // 传递给脚本的参数，通常是启动命令
       instances: 1,        // 启动的实例数量
@@ -20,19 +20,4 @@ module.exports = {
       }
     }
   ],
-
-  /**
-   * Deployment section
-   * https://pm2.keymetrics.io/docs/usage/deployment/
-   */
-  deploy: {
-    production: {
-      user: 'username',      // SSH 用户名
-      host: 'hostname',      // SSH 主机名或 IP 地址
-      ref: 'origin/main',  // Git 仓库的分支
-      repo: 'git@github.com:val213/IBMinSCUT.git',      // Git 仓库的 URL
-      path: '/var/www/app',  // 远程服务器上的部署路径
-      'post-deploy': 'npm install && pm2 startOrReload ecosystem.config.js --env production' // 部署后执行的命令
-    }
-  }
-};
+}

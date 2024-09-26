@@ -19,5 +19,8 @@
   },
   "devDependencies": {
     "@element-plus/nuxt": "^1.0.9"
+  },
+  "engines": {
+    "node": "16.20.2"
   }
 }
