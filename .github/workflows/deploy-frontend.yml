@@ -74,7 +74,7 @@ jobs:
             export NVM_DIR="$HOME/.nvm" &&
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" &&
             nvm use 16.20.2 &&
-            echo "$SSH_PASSWORD" | sudo -S mkdir -p /usr/share/nginx/html/ibminscut &&
+            sudo -S mkdir -p /usr/share/nginx/html/ibminscut && echo "success" &&
             echo "$SSH_PASSWORD" | sudo -S tar -xzf /tmp/nuxt-build.tar.gz -C /usr/share/nginx/html/ibminscut &&
             echo "$SSH_PASSWORD" | sudo -S chown -R www-data:www-data /usr/share/nginx/html/ibminscut &&
             echo "$SSH_PASSWORD" | sudo -S chmod -R 755 /usr/share/nginx/html/ibminscut &&
