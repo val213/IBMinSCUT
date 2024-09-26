@@ -62,25 +62,26 @@ jobs:
           name: nuxt-build
           path: .
 
-      - name: Deploy Nuxt frontend
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
-          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
-        run: |
-          echo "$SSH_PRIVATE_KEY" > deploy_key
-          chmod 600 deploy_key
-          scp -o StrictHostKeyChecking=no -i deploy_key nuxt-build.tar.gz ibm@123.207.71.173:/tmp/nuxt-build.tar.gz || { echo 'SCP failed'; exit 1; }
-          ssh -o StrictHostKeyChecking=no -i deploy_key ibm@123.207.71.173 '
-            export NVM_DIR="$HOME/.nvm" &&
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" &&
-            nvm use 16.20.2 &&
-            echo "$SSH_PASSWORD" | sudo -S mkdir -p /usr/share/nginx/html/ibminscut &&
-            echo "$SSH_PASSWORD" | sudo -S tar -xzf /tmp/nuxt-build.tar.gz -C /usr/share/nginx/html/ibminscut &&
-            echo "$SSH_PASSWORD" | sudo -S chown -R www-data:www-data /usr/share/nginx/html/ibminscut &&
-            echo "$SSH_PASSWORD" | sudo -S chmod -R 755 /usr/share/nginx/html/ibminscut &&
-            rm /tmp/nuxt-build.tar.gz &&
-            cd /usr/share/nginx/html/ibminscut/.output &&
-            echo "$SSH_PASSWORD" | sudo -S npm install --production &&
-            pm2 restart nuxt-app || pm2 start npm --name "nuxt-app" -- run start
-          ' || { echo 'SSH command failed'; exit 1; }
-          rm deploy_key
+          - name: Deploy Nuxt frontend
+          env:
+            SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+            SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          run: |
+            echo "$SSH_PRIVATE_KEY" > deploy_key
+            chmod 600 deploy_key
+            scp -o StrictHostKeyChecking=no -i deploy_key nuxt-build.tar.gz ibm@123.207.71.173:/tmp/nuxt-build.tar.gz || { echo 'SCP failed'; exit 1; }
+            ssh -o StrictHostKeyChecking=no -i deploy_key ibm@123.207.71.173 '
+              export NVM_DIR="$HOME/.nvm" &&
+              [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" &&
+              nvm use 16.20.2 &&
+              echo "$SSH_PASSWORD" | sudo -S mkdir -p /usr/share/nginx/html/ibminscut &&
+              echo "$SSH_PASSWORD" | sudo -S tar -xzf /tmp/nuxt-build.tar.gz -C /usr/share/nginx/html/ibminscut &&
+              echo "$SSH_PASSWORD" | sudo -S chown -R www-data:www-data /usr/share/nginx/html/ibminscut &&
+              echo "$SSH_PASSWORD" | sudo -S chmod -R 755 /usr/share/nginx/html/ibminscut &&
+              rm /tmp/nuxt-build.tar.gz &&
+              cd /usr/share/nginx/html/ibminscut/.output/server &&
+              if [ ! -f package.json ]; then echo "package.json not found"; exit 1; fi &&
+              sudo env "PATH=$PATH" npm install --production &&
+              sudo env "PATH=$PATH" pm2 restart nuxt-app || sudo env "PATH=$PATH" pm2 start npm --name "nuxt-app" -- run start
+            ' || { echo 'SSH command failed'; exit 1; }
+            rm deploy_key
