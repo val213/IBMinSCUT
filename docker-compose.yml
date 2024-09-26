@@ -1,8 +1,0 @@
-version: '3'
-services:
-  nuxt-app:
-    image: ${{ secrets.DOCKER_USERNAME }}/nuxt-app:latest
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
