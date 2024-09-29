@@ -88,7 +88,6 @@ jobs:
           sudo -E chmod -R 755 /usr/share/nginx/html/ibminscut &&
           rm nuxt-build.tar.gz &&
           cd /usr/share/nginx/html/ibminscut &&
-          sudo -E /home/ibm/.nvm/versions/node/v20.17.2/bin/npm install --production &&
-          sudo -E /home/ibm/.nvm/versions/node/v20.17.2/bin/pm2 start /usr/share/nginx/html/ibminscut/ecosystem.config.js
-          || { echo 'SSH command failed'; exit 1; }
+          sudo -E /home/ibm/.nvm/versions/node/v20.17.0/bin/npm install --production &&
+          sudo -E /home/ibm/.nvm/versions/node/v20.17.0/bin/pm2 start /usr/share/nginx/html/ibminscut/ecosystem.config.js || { echo 'SSH command failed'; exit 1; }
           rm deploy_key
