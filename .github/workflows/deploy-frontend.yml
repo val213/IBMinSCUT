@@ -75,21 +75,13 @@ jobs:
           # 使用 SSH 连接到服务器
           ssh -o StrictHostKeyChecking=no -i deploy_key ibm@123.207.71.173
 
-          # 设置 NVM 目录和加载 nvm
-          echo "Loading NVM"
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
           # 打印 Node.js 版本以检查是否切换到了正确版本
           echo "Current Node.js version:"
           node --version
 
-          # 使用指定版本的 Node.js
-          nvm use 20.17.0
-
-          # 打印当前 Node.js 版本以确认
-          echo "After using 'nvm use 20.17.0':"
-          node --version
+          # 在服务器上部署 Nuxt 前端
+          echo "Deploying Nuxt frontend..."
           sudo -E mkdir -p /usr/share/nginx/html/ibminscut &&
           sudo -E tar -xzf /tmp/nuxt-build.tar.gz -C /usr/share/nginx/html/ibminscut &&
           sudo -E chown -R www-data:www-data /usr/share/nginx/html/ibminscut &&
