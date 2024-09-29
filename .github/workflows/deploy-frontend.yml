@@ -83,12 +83,12 @@ jobs:
           # 在服务器上部署 Nuxt 前端
           echo "Deploying Nuxt frontend..."
           sudo -E mkdir -p /usr/share/nginx/html/ibminscut &&
-          sudo -E tar -xzf /tmp/nuxt-build.tar.gz -C /usr/share/nginx/html/ibminscut &&
+          sudo -E tar -xzf nuxt-build.tar.gz -C /usr/share/nginx/html/ibminscut &&
           sudo -E chown -R www-data:www-data /usr/share/nginx/html/ibminscut &&
           sudo -E chmod -R 755 /usr/share/nginx/html/ibminscut &&
-          rm /tmp/nuxt-build.tar.gz &&
+          rm nuxt-build.tar.gz &&
           cd /usr/share/nginx/html/ibminscut &&
-          sudo -E /home/ibm/.nvm/versions/node/v16.20.2/bin/npm install --production &&
-          sudo -E /home/ibm/.nvm/versions/node/v16.20.2/bin/pm2 start /usr/share/nginx/html/ibminscut/ecosystem.config.js
-          ' || { echo 'SSH command failed'; exit 1; }
+          sudo -E /home/ibm/.nvm/versions/node/v20.17.2/bin/npm install --production &&
+          sudo -E /home/ibm/.nvm/versions/node/v20.17.2/bin/pm2 start /usr/share/nginx/html/ibminscut/ecosystem.config.js
+          || { echo 'SSH command failed'; exit 1; }
           rm deploy_key
